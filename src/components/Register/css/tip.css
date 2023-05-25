@@ -1,0 +1,16 @@
+.tip {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    color: #ccc;
+    user-select: none;
+}
+
+.tip.through {
+    color: #13a825;
+}
+
+.tip.err {
+    color: #ff2323;
+}
