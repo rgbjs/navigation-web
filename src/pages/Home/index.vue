@@ -2,24 +2,16 @@
     <div class="container">
         <div class="swiper-container" ref="swiper">
             <div class="swiper-wrapper">
-                <div class="swiper-slide" v-for="(list, i) in tagList" :key="i">
-                    <!-- 列表标题 -->
-                    <h2 class="list-name">{{ i }}</h2>
-                    <!-- 列表 -->
-                    <ul class="list-container">
-                        <!-- 标签(Tag) -->
-                        <li v-for="(item, j) in list" :key="j">
-                            <a :href="item.url" target="_blank">
-                                <div class="icon"></div>
-                                <div class="title">{{ item.title }}</div>
-                                <div class="func"></div>
-                            </a>
-                        </li>
-                        <!-- 添加Tag项 -->
-                        <li class="add-itme el-icon-circle-plus-outline" :data-list-name="i" @click="addTag(i)">
-                        </li>
-                    </ul>
-                </div>
+                <template v-if="Object.keys(tagList).length > 0">
+                    <div class="swiper-slide" v-for="(list, i) in tagList" :key="i">
+                        <list :name="i" :tag-list="list" @addTag="addTag"></list>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="swiper-slide">
+                        <list name="default" :tag-list="[]" @addTag="addTag"></list>
+                    </div>
+                </template>
             </div>
             <!-- 如果需要分页器 -->
             <div class="swiper-pagination"></div>
@@ -53,12 +45,14 @@
 <script>
 import Swiper from 'swiper'
 import 'swiper/css/swiper.min.css'
-import '@/assets/css/transparent-scroll.css'
 import request from '@/request'
 import parseToken from '@/utils/paseToken'
-import { Message } from 'element-ui';
+import { Message } from 'element-ui'
+import list from './list.vue'
 import { mapActions, mapState } from 'vuex'
+import './style/index.css'
 export default {
+    components: { list },
     data() {
         return {
             centerDialogVisible: false,
@@ -122,7 +116,7 @@ export default {
         }
     },
     mounted() {
-        document.body.style.backgroundColor = 'rgb(203, 220, 247)' // 设置body背景颜色
+        document.body.classList.add('home') // 为body添加home路由特定样式
         this.getTagList() // 请求标签数据
 
         this.swiper = new Swiper(this.$refs.swiper, {
@@ -137,7 +131,7 @@ export default {
         })
     },
     beforeDestroy() {
-        document.body.style.backgroundColor = '' // 移出body背景颜色
+        document.body.classList.remove('home') // 为body移出home路由的特定样式
         this.swiper.destroy()
     },
     computed: {
@@ -148,72 +142,13 @@ export default {
 
 <style scoped lang="scss">
 .swiper-container {
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 1000px;
     height: 500px;
-    border: 1px solid black;
-}
-
-.list-name {
-    padding: 15px 0;
-    margin-left: 27px;
-    font-size: 20px;
-}
-
-.list-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-
-    >li {
-        width: 112px;
-        height: 112px;
-        margin: 10px 27px;
-        outline: 1px solid #077189;
-
-        a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            padding-top: 16px;
-            box-sizing: border-box;
-            color: #424242;
-        }
-
-        .icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto;
-            border-radius: 50%;
-            overflow: hidden;
-            background-color: antiquewhite;
-        }
-
-        .title {
-            height: 36px;
-            margin-top: 6px;
-            line-height: 36px;
-            text-align: center;
-        }
-
-        &.add-itme {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: auto;
-            font-size: 60px;
-            cursor: pointer;
-            color: #077189;
-            opacity: 0;
-            transition: .5s;
-
-            &:hover {
-                opacity: 1;
-            }
-        }
-    }
+    margin-top: 100px;
+    outline: 1px solid black;
 }
 </style>

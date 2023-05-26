@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://127.0.0.1:5002' // 开发时设置, 正式上线请删除
+// axios.defaults.baseURL = 'http://127.0.0.1:5002' // 开发时设置, 正式上线请删除
 
 // 请求拦截器
 axios.interceptors.request.use((config) => {
